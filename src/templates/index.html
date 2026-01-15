@@ -1,0 +1,88 @@
+{# 
+  Página principal.
+  - Formulário cria tarefas via POST em /add
+  - Exibe Kanban em 3 colunas
+  - Ações: mover status, editar, excluir
+#}
+
+{% extends "base.html" %}
+
+{% block title %}Início - Sistema de Tarefas{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+  {# 
+    IMPORTANTE:
+    - action usando url_for('main.add') evita erro com blueprint.
+    - name dos campos deve bater com request.form[...] no routes.py:
+      titulo, descricao, prioridade
+  #}
+  <form method="post" action="{{ url_for('main.add') }}">
+    <input name="titulo" placeholder="Título da tarefa" required>
+    <input name="descricao" placeholder="Descrição" required>
+
+    <select name="prioridade" required>
+      <option>Média</option>
+      <option>Alta</option>
+      <option>Baixa</option>
+    </select>
+
+    <button type="submit">Adicionar</button>
+  </form>
+</section>
+
+<section class="kanban">
+  {# 
+    Padronização de domínio:
+    - col_value = valor REAL do status no back-end (inglês)
+    - col_label = label amigável pro usuário (português)
+  #}
+
+  {% for col_value, col_label in [
+    ('To Do', 'A Fazer'),
+    ('In Progress', 'Em Progresso'),
+    ('Done', 'Completo')
+  ] %}
+    <div class="column">
+      <h2>{{ col_label }}</h2>
+
+      {# Lista somente tarefas que têm exatamente o status col_value #}
+      {% for t in tarefas if t.status == col_value %}
+        <div class="card">
+          <h3>{{ t.titulo }}</h3>
+          <p>{{ t.descricao }}</p>
+
+          {# Prioridade (mudança de escopo) #}
+          <span class="badge">{{ t.prioridade }}</span>
+
+          {# Ações do card #}
+          <div class="actions">
+            {# Mudar status (rota: /status/<id>/<status>) #}
+            <a title="Mover para A Fazer"
+               href="{{ url_for('main.mudar_status', id=t.id, status='To Do') }}">⬅</a>
+
+            <a title="Mover para Em Progresso"
+               href="{{ url_for('main.mudar_status', id=t.id, status='In Progress') }}">🔄</a>
+
+            <a title="Mover para Completo"
+               href="{{ url_for('main.mudar_status', id=t.id, status='Done') }}">➡</a>
+
+            {# Editar (rota: /edit/<id>) #}
+            <a title="Editar tarefa"
+               class="edit"
+               href="{{ url_for('main.edit', id=t.id) }}">✏</a>
+
+            {# Excluir (rota: /delete/<id>) #}
+            <a title="Excluir tarefa"
+               class="delete"
+               href="{{ url_for('main.delete', id=t.id) }}">🗑</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+</section>
+
+{% endblock %}

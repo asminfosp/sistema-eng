@@ -1,0 +1,39 @@
+{# 
+  Página de edição.
+  - GET /edit/<id> mostra o formulário preenchido
+  - POST /update/<id> salva alterações
+#}
+
+{% extends "base.html" %}
+
+{% block title %}Editar Tarefa{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+  {# action usando url_for para evitar erros com blueprint #}
+  <form method="post" action="{{ url_for('main.update', id=tarefa.id) }}">
+
+    {# Campos principais #}
+    <input name="titulo" value="{{ tarefa.titulo }}" required>
+    <input name="descricao" value="{{ tarefa.descricao }}" required>
+
+    {# Status internos padronizados: To Do, In Progress, Done #}
+    <select name="status" required>
+      <option value="To Do" {% if tarefa.status == "To Do" %}selected{% endif %}>A Fazer</option>
+      <option value="In Progress" {% if tarefa.status == "In Progress" %}selected{% endif %}>Em Progresso</option>
+      <option value="Done" {% if tarefa.status == "Done" %}selected{% endif %}>Completo</option>
+    </select>
+
+    {# Prioridade (mudança de escopo) #}
+    <select name="prioridade" required>
+      <option value="Baixa" {% if tarefa.prioridade == "Baixa" %}selected{% endif %}>Baixa</option>
+      <option value="Média" {% if tarefa.prioridade == "Média" %}selected{% endif %}>Média</option>
+      <option value="Alta" {% if tarefa.prioridade == "Alta" %}selected{% endif %}>Alta</option>
+    </select>
+
+    <button type="submit">Salvar</button>
+  </form>
+</section>
+
+{% endblock %}

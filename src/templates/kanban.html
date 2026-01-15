@@ -1,0 +1,49 @@
+{# 
+  Página Kanban (opcional).
+  Reaproveita o mesmo padrão visual e exibe as colunas.
+  Útil para print separado e para a rota /kanban.
+#}
+
+{% extends "base.html" %}
+
+{% block title %}Kanban - Sistema de Tarefas{% endblock %}
+
+{% block content %}
+
+<section class="kanban">
+  {% for col_value, col_label in [
+    ('To Do', 'A Fazer'),
+    ('In Progress', 'Em Progresso'),
+    ('Done', 'Completo')
+  ] %}
+    <div class="column">
+      <h2>{{ col_label }}</h2>
+
+      {% for t in tarefas if t.status == col_value %}
+        <div class="card">
+          <h3>{{ t.titulo }}</h3>
+          <p>{{ t.descricao }}</p>
+          <span class="badge">{{ t.prioridade }}</span>
+
+          <div class="actions">
+            <a title="Mover para A Fazer"
+               href="{{ url_for('main.mudar_status', id=t.id, status='To Do') }}">⬅</a>
+            <a title="Mover para Em Progresso"
+               href="{{ url_for('main.mudar_status', id=t.id, status='In Progress') }}">🔄</a>
+            <a title="Mover para Completo"
+               href="{{ url_for('main.mudar_status', id=t.id, status='Done') }}">➡</a>
+
+            <a title="Editar tarefa"
+               class="edit"
+               href="{{ url_for('main.edit', id=t.id) }}">✏</a>
+            <a title="Excluir tarefa"
+               class="delete"
+               href="{{ url_for('main.delete', id=t.id) }}">🗑</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</section>
+
+{% endblock %}
