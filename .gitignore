@@ -8,3 +8,8 @@ __pycache__/
 
 # Sistema
 .DS_Store
+
+# Ignorar pycache
+
+src/__pycache__/app.cpython-314.pyc
+src/__pycache__/routes.cpython-314.pyc
