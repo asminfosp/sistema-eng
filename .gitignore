@@ -1,15 +1,15 @@
 # Ambiente virtual
 venv/
 
-# Cache Python
+# Python cache / bytecode (em qualquer pasta)
 __pycache__/
+**/__pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Pytest
 .pytest_cache/
 
-# Sistema
+# Outros
 .DS_Store
-
-# Ignorar pycache
-
-src/__pycache__/app.cpython-314.pyc
-src/__pycache__/routes.cpython-314.pyc
