@@ -9,7 +9,7 @@ from .routes import main
 # Criação da aplicação
 app = Flask(__name__)
 
-# Chave para sessões (boa prática)
+# Chave para sessões (Otimo para práticas de segurança)
 app.secret_key = "secret_key"
 
 # Registro do blueprint de rotas
